@@ -76,7 +76,7 @@ func (s *APIServer) Run() error {
 	return server.ListenAndServe()
 }
 
-func dataResponse(w http.ResponseWriter, r *http.Request, data ...any) {
+func dataResponse(w http.ResponseWriter, _ *http.Request, data ...any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	jsonData, err := json.Marshal(data)
