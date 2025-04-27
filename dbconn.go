@@ -67,8 +67,6 @@ func setEnv() settingsDatabase {
 	return dbSettings
 }
 
-
-
 func (db *DataBase) CloseConn() {
 	err := db.Close()
 	if err != nil {
