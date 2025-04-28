@@ -28,14 +28,14 @@ This project is the backend service for the SDAB. It provides APIs for data proc
     ```
 4. Configure environment variables as per `.env`.
 
-`.env`:
-```bash
+    `.env`:
+    ```bash
     host: "192.0.0.1"   
     port: "3306"  
     user: "user"  
     password: "password"  
     dbname: "your_db"  
-```
+    ```
 
 ## Usage
 Start the development server:
