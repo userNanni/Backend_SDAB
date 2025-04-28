@@ -12,15 +12,15 @@ jobs:
         with:
           go-version: '1.21.x'
       - name: Install dependencies
-        run: go get .
+        run: go get . 
       - name: 'Create env file'
         run: |
           touch .env
-          echo host: ${{ secrets.HOST }} >> .env
-          echo port: ${{ secrets.PORT }} >> .env
-          echo user: ${{ secrets.USER }} >> .env
-          echo password: ${{ secrets.PASSWORD }} >> .env
-          echo dbname: ${{ secrets.DB_NAME }} >> .env
+          echo host: ${{ secrets.HOST }} > .env
+          echo port: ${{ secrets.PORT }} > .env
+          echo user: ${{ secrets.USER }} > .env
+          echo password: ${{ secrets.PASSWORD }} > .env
+          echo dbname: ${{ secrets.DB_NAME }} > .env
           cat .env
       - name: Build
         run: go build -v ./...
