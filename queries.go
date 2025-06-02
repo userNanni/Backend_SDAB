@@ -1,40 +1,70 @@
 package main
 
 import (
-	"log"
+	"database/sql"
 
 	_ "github.com/lib/pq"
 )
 
-func (db *DataBase) data(Information string) []Data {
-	if Information == "" {
-		log.Println("No information provided")
-		return nil
+type DimLoja struct {
+	SkLoja          int
+	NumeroLoja      int
+	OmLoja          string
+	Cidade          string
+	EstadoFederacao string
+	RegiaoMilitar   string
+}
+
+type QueryInfo struct {
+	SQL      string
+	ScanFunc func(*sql.Rows) ([]interface{}, error)
+}
+
+var queries = map[string]QueryInfo{
+	"dim_loja": {
+		SQL: "SELECT * FROM dim_loja;",
+		ScanFunc: func(rows *sql.Rows) ([]interface{}, error) {
+			var results []interface{}
+			for rows.Next() {
+				var d DimLoja
+				err := rows.Scan(
+					&d.SkLoja,
+					&d.NumeroLoja,
+					&d.OmLoja,
+					&d.Cidade,
+					&d.EstadoFederacao,
+					&d.RegiaoMilitar,
+				)
+				if err != nil {
+					return nil, err
+				}
+				results = append(results, d)
+			}
+			return results, nil
+		},
+	},
+}
+
+func (db *DataBase) Data(key string) ([]interface{}, error) {
+	if key == "" {
+		return nil, nil
 	}
 
-	var sql string
-
-	var dataList []Data
-
-	if Information == "lojas" {
-		log.Println("Fetching data for lojas")
-		sql = "SELECT cidade FROM fato_indicadores_nivel_servico_lojas INNER JOIN dim_tempo USING (sk_tempo) INNER JOIN dim_loja USING (sk_loja);"
+	queryInfo, ok := queries[key]
+	if !ok {
+		return nil, nil
 	}
 
-	data, error := db.Query(sql)
+	rows, err := db.Query(queryInfo.SQL)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-	if error != nil {
-		log.Fatal("Error querying database:", error)
+	results, err := queryInfo.ScanFunc(rows)
+	if err != nil {
+		return nil, err
 	}
 
-	for data.Next() {
-		var d Data
-		if err := data.Scan(&d.Cidade); err != nil {
-			log.Println("Error scanning data:", err)
-			continue
-		}
-		dataList = append(dataList, d)
-	}
-
-	return dataList
+	return results, nil
 }

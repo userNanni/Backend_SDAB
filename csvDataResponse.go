@@ -68,6 +68,7 @@ func csvDataResponse(w http.ResponseWriter, _ *http.Request, dataList any) {
 	}
 
 	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", "attachment;filename=SDAB.csv")
 	w.WriteHeader(http.StatusOK)
 	w.Write(buffer.Bytes())
 }

@@ -4,37 +4,28 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	_ "github.com/lib/pq"
 )
 
 type APIServer struct {
 	addr string
+	db   *DataBase
 }
 
-func NewAPIServer(addr string) *APIServer {
+func NewAPIServer(addr string, db *DataBase) *APIServer {
 	return &APIServer{
 		addr: addr,
+		db:   db,
 	}
 }
-
-type Data struct {
-	Cidade string
-}
-
-var dataList []Data
 
 func main() {
 	startPort := 8080
 	port := findAvailablePort(startPort)
 
-	server := NewAPIServer(fmt.Sprintf(":%d", port))
-
 	db := dbConn()
-
-	dataList = db.data("lojas")
-
 	defer db.CloseConn()
+
+	server := NewAPIServer(fmt.Sprintf(":%d", port), db)
 
 	if err := server.Run(); err != nil {
 		log.Fatal("Server failed:", err)
@@ -48,12 +39,84 @@ func (s *APIServer) Run() error {
 		w.Write([]byte("Hello, Web!"))
 	})
 
-	router.HandleFunc("/api/v1/lojas", func(w http.ResponseWriter, r *http.Request) {
-		dataResponse(w, r, dataList)
+	router.HandleFunc("/api/v1/dim_loja", func(w http.ResponseWriter, r *http.Request) {
+		data, err := s.db.Data("dim_loja")
+		if err != nil {
+			http.Error(w, "Failed to get data", http.StatusInternalServerError)
+			return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+		}
+		dataResponse(w, r, data)
 	})
 
-	router.HandleFunc("/api/v1/csv/lojas", func(w http.ResponseWriter, r *http.Request) {
-		csvDataResponse(w, r, dataList)
+	router.HandleFunc("/api/v1/csv/dim_loja", func(w http.ResponseWriter, r *http.Request) {
+		data, err := s.db.Data("dim_loja")
+		if err != nil {
+			http.Error(w, "Failed to get data", http.StatusInternalServerError)
+			return
+		}
+		csvDataResponse(w, r, data)
 	})
 
 	server := http.Server{

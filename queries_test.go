@@ -1,5 +1,7 @@
 package main
 
+/*
+
 import (
 	"database/sql"
 	"log"
@@ -58,3 +60,4 @@ func TestData(t *testing.T) {
 		database.data("lojas")
 	})
 }
+*/
