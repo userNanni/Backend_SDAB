@@ -23,6 +23,7 @@ func main() {
 	port := findAvailablePort(startPort)
 
 	db := dbConn()
+	
 	defer db.CloseConn()
 
 	server := NewAPIServer(fmt.Sprintf(":%d", port), db)
