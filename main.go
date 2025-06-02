@@ -43,70 +43,7 @@ func (s *APIServer) Run() error {
 		data, err := s.db.Data("dim_loja")
 		if err != nil {
 			http.Error(w, "Failed to get data", http.StatusInternalServerError)
-			return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			
-		}
+			return}
 		dataResponse(w, r, data)
 	})
 
